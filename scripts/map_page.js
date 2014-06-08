@@ -1,4 +1,4 @@
-var map, elvSearch = [];
+var map, currentProjectsSearch = [];
 
 /* Basemap Layers */
 var mapquestOSM = L.tileLayer("http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png", {
@@ -21,11 +21,11 @@ var mapquestHYB = L.layerGroup([L.tileLayer("http://{s}.mqcdn.com/tiles/1.0.0/sa
 })]);
 
 /* Overlay Layers */
-var elv = L.geoJson(null, {
+var currentprojects = L.geoJson(null, {
   pointToLayer: function (feature, latlng) {
     return L.marker(latlng, {
       icon: L.icon({
-        iconUrl: "assets/car2.png",
+        iconUrl: "assets/currentprojects.png",
         iconSize: [24, 28],
         iconAnchor: [12, 28],
         popupAnchor: [0, -25]
@@ -36,12 +36,12 @@ var elv = L.geoJson(null, {
   },
   onEachFeature: function (feature, layer) {
     if (feature.properties) {
-      var content = "<table class='table table-striped table-bordered table-condensed'>" + "<tr><th>Name</th><td>" + feature.properties.name + "</td></tr>" + "<tr><th>Address: </th><td>" + feature.properties.address + "<tr><th>Postcode: </th><td>" + feature.properties.postcode + "</td></tr><tr><th>Phone: </th><td>" + feature.properties.phone + "</td></tr>" + "<table>";
+      var content = "<table class='table table-striped table-bordered table-condensed'>" + "<tr><th>Name</th><td>" + feature.properties.name + "</td></tr>" + "<tr><th>Organisation: </th><td>" + feature.properties.organisation + "</td></tr>" + "<table>";
 
       if (document.body.clientWidth <= 767) {
         layer.on({
           click: function (e) {
-            $("#feature-title").html(feature.properties.name + ", " + feature.properties.town);
+            $("#feature-title").html(feature.properties.name + ", " + feature.properties.organisation);
             $("#feature-info").html(content);
             $("#featureModal").modal("show");
           }
@@ -53,9 +53,9 @@ var elv = L.geoJson(null, {
           closeButton: false
         });
       }
-      elvSearch.push({
+      currentProjectsSearch.push({
         name: layer.feature.properties.name,
-        source: "Scrapyards",
+        source: "CurrentProjects",
         id: L.stamp(layer),
         lat: layer.feature.geometry.coordinates[1],
         lng: layer.feature.geometry.coordinates[0]
@@ -64,8 +64,8 @@ var elv = L.geoJson(null, {
   }
 });
 
-$.getJSON("data/elv.geojson", function (data) {
-  elv.addData(data);
+$.getJSON("data/currentprojects.geojson", function (data) {
+  currentprojects.addData(data);
 });
 
 map = L.map("map", {
@@ -76,7 +76,7 @@ map = L.map("map", {
 
 /* var markers = L.markerClusterGroup(); */
 
-map.addLayer(elv);
+map.addLayer(currentprojects);
 /* map.addLayer(markers); */
 
 /* Larger screens get expanded layer control */
@@ -93,7 +93,7 @@ var baseLayers = {
 };
 
 var overlays = {
-  "<img src='assets/car2.png' width='24' height='28'>&nbsp;Active Projects": elv
+  "<img src='assets/car2.png' width='24' height='28'>&nbsp;Current Projects": currentprojects
 };
 
 var layerControl = L.control.layers(baseLayers, overlays, {
@@ -102,7 +102,7 @@ var layerControl = L.control.layers(baseLayers, overlays, {
 
 /* Add overlay layers to map after defining layer control to preserver order */
 
-/* map.fitBounds(elv.getBounds()); */
+/* map.fitBounds(currentProjects.getBounds()); */
 /* map.addLayer(theaters); */
 
 /*
@@ -119,16 +119,16 @@ $("#searchbox").click(function () {
 
 /* Typeahead search functionality */
 $(document).one("ajaxStop", function () {
-  map.fitBounds(elv.getBounds());
+  map.fitBounds(currentprojects.getBounds());
   $("#loading").hide();
 
-  var elvBH = new Bloodhound({
-    name: "Scrapyards",
+  var currentProjectsBH = new Bloodhound({
+    name: "currentprojects",
     datumTokenizer: function (d) {
       return Bloodhound.tokenizers.whitespace(d.name);
     },
     queryTokenizer: Bloodhound.tokenizers.whitespace,
-    local: elvSearch,
+    local: currentProjectsSearch,
     limit: 10
   });
 
@@ -162,7 +162,7 @@ $(document).one("ajaxStop", function () {
     },
     limit: 10
   });
-  elvBH.initialize();
+  currentProjectsBH.initialize();
   geonamesBH.initialize();
 
   /* instantiate the typeahead UI */
@@ -171,11 +171,11 @@ $(document).one("ajaxStop", function () {
     highlight: true,
     hint: false
   }, {
-    name: "Scrapyards",
+    name: "currentprojects",
     displayKey: "name",
-    source: elvBH.ttAdapter(),
+    source: currentProjectsBH.ttAdapter(),
     templates: {
-      header: "<h4 class='typeahead-header'>Scrapyards</h4>"
+      header: "<h4 class='typeahead-header'>Current Projects</h4>"
     }
   }, 
   {
@@ -186,9 +186,9 @@ $(document).one("ajaxStop", function () {
       header: "<h4 class='typeahead-header'><img src='assets/img/globe.png' width='25' height='25'>&nbsp;GeoNames</h4>"
     }
   }).on("typeahead:selected", function (obj, datum) {
-    if (datum.source === "Scrapyards") {
-      if (!map.hasLayer(elv)) {
-        map.addLayer(elv);
+    if (datum.source === "CurrentProjects") {
+      if (!map.hasLayer(currentprojects)) {
+        map.addLayer(currentprojects);
       }
       map.setView([datum.lat, datum.lng], 17);
       if (map._layers[datum.id]) {
