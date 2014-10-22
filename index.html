@@ -359,6 +359,32 @@
 	</div>
 </div>
 
+<div class="modal fade" id="latestNewsModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg modal-wide">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Latest News</h4>
+          </div>
+          <div class="modal-body">
+            <div class="tab-content" id="newsTabsContent" style="padding-top: 10px;">
+              <div class="tab-pane fade active in" id="about">
+                <div class="panel panel-primary">
+                  	<div class="panel-heading">Downstreams applies to the Nominet Trust Social Tech Seed Fund</div>
+                  		<p></p>
+                  		<p>We've just applied to the Social Tech Seed Fund. Why not watch the video for our application?</p><p></p>
+                  		<iframe width="640" height="360" src="//www.youtube.com/embed/eEvuofWA_0s?rel=0" frameborder="0" allowfullscreen></iframe>
+                  		<br><p></p>
+                  		<p><a href="http://www.youtube.com/watch?v=eEvuofWA_0s">Here is a link</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
 <div class="modal fade" id="exploreModal" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -370,7 +396,7 @@
             <div class="tab-content" id="aboutTabsContent" style="padding-top: 10px;">
               <div class="tab-pane fade active in" id="about">
                 <div class="panel panel-primary">
-                  	<div class="panel-heading">We will help people to explore data about their rivers - looking at:</div>
+                  	<div class="panel-heading">We will help people to explore the reasons for problems on their rivers - looking at:</div>
                   		<p></p>
 	                	<ul>
 		                	<li>Things that you can do locally near your river</li>
@@ -398,7 +424,7 @@
             <div class="tab-content" id="aboutTabsContent" style="padding-top: 10px;">
               <div class="tab-pane fade active in" id="about">
                 <div class="panel panel-primary">
-                  	<div class="panel-heading">We will help people to explore data about their rivers - looking at:</div>
+                  	<div class="panel-heading">We will help people to understand data about their rivers - looking at:</div>
                   		<p></p>
 	                	<ul>
 		                	<li>Risks of flooding or pollution that you may face</li>
@@ -562,6 +588,10 @@ function init(){
       ga('send', 'pageview');
 
     </script>
+   <script type="text/javascript">    
+    // $(window).load(function(){ $('#latestNewsModal').modal('show'); });
+    $( document ).ready( function() { $( '#latestNewsModal' ).modal( 'toggle' ); });
+	</script>
 </body>    
 </body>
 </html>
